@@ -1,4 +1,4 @@
-LIBS = -lncurses
+LIBS = -lncursesw
 CC = g++
 CFLAGS = -Wall
 
