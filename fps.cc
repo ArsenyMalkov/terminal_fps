@@ -19,8 +19,6 @@ int mapWidth = 16;
 float fov = 3.14159 / 4;
 float depth = 16.0f;
 
-// mvaddch(2 + tetrominoY, WIDTH + 7 + tetrominoX, ' ');
-
 int main() {
     wchar_t *screen = new wchar_t[WIDTH * HEIGHT];
 
@@ -29,17 +27,17 @@ int main() {
     bool quit = false;
 
     map += "################";
+    map += "#..#...........#";
+    map += "#..............#";
+    map += "#..#...........#";
+    map += "#..#...........#";
+    map += "####...........#";
     map += "#..............#";
     map += "#..............#";
     map += "#..............#";
     map += "#..........#...#";
     map += "#..........#...#";
-    map += "#..............#";
-    map += "#..............#";
-    map += "#..............#";
-    map += "#..............#";
-    map += "#..............#";
-    map += "#..............#";
+    map += "#..........#...#";
     map += "#.......########";
     map += "#..............#";
     map += "#..............#";
@@ -66,22 +64,22 @@ int main() {
             playerA += (ch == 'd') ? 0.1 : 0;
 
             if (ch == 'w') {
-                playerX += sinf(playerA) * 1.0f;
-                playerY += cosf(playerA) * 1.0f;
+                playerX += sinf(playerA);
+                playerY += cosf(playerA);
 
                 if (map[(int) playerY * mapWidth + (int) playerX] == '#') {
-                    playerX -= sinf(playerA) * 1.0f;
-                    playerY -= cosf(playerA) * 1.0f;
+                    playerX -= sinf(playerA);
+                    playerY -= cosf(playerA);
                 }
             }
             
             if (ch == 's') {
-                playerX -= sinf(playerA) * 1.0f;
-                playerY -= cosf(playerA) * 1.0f;
+                playerX -= sinf(playerA);
+                playerY -= cosf(playerA);
 
                 if (map[(int) playerY * mapWidth + (int) playerX] == '#') {
-                    playerX += sinf(playerA) * 1.0f;
-                    playerY += cosf(playerA) * 1.0f;
+                    playerX += sinf(playerA);
+                    playerY += cosf(playerA);
                 }
             }
         }
@@ -138,7 +136,6 @@ int main() {
             else if (distanceToWall < depth / 3.0f) shade = 0x2593;
             else if (distanceToWall < depth / 2.0f) shade = 0x2592;
             else if (distanceToWall < depth) shade = 0x2591;
-            else shade = ' ';
 
             if (boundary) shade = ' ';
 
@@ -160,7 +157,6 @@ int main() {
             }
         }
 
-        // screen[WIDTH * HEIGHT - 1] = '\0';
         // mvprint(400, 0, L"X=%3.2f, Y=%3.2f, A=%3.2f FPS=%3.2f ", playerX, playerY, playerA, 1.0f / elapsedTime);
         
         for (int nx = 0; nx < mapWidth; nx++) {
@@ -173,8 +169,11 @@ int main() {
 
         for (int y = 0; y < HEIGHT; y++) {
             for (int x = 0; x < WIDTH; x++) {
-                wchar_t c[] = { screen[y * WIDTH + x], 0 };
-                mvaddwstr(y, x, c);
+                cchar_t c; 
+                setcchar(&c, &screen[y * WIDTH + x], WA_NORMAL, 4, NULL);
+                mvadd_wch(y, x, &c);
+                //wchar_t c[] = { screen[y * WIDTH + x], 0 };
+                //mvaddwstr(y, x, c);
             }
         }
 
